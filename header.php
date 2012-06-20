@@ -13,7 +13,6 @@
 <meta name="ICBM" content="ICBM">
 <meta name="author" content="AUTHOR">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
 
 <title><?php
 	global $page, $paged;
@@ -24,17 +23,18 @@
 ?>
 </title>
 
+<?php if (APPLICATION_ENV !== 'production') :?>
 <link rel="stylesheet" href="<?php bloginfo( 'stylesheet_directory' ); ?>/css/normalize.css">
 <link rel="stylesheet" href="<?php bloginfo( 'stylesheet_directory' ); ?>/css/baseline.css">
 <link rel="stylesheet" href="<?php bloginfo( 'stylesheet_directory' ); ?>/css/grid.css">
 <link rel="stylesheet" href="<?php bloginfo( 'stylesheet_directory' ); ?>/css/style.css">
 
-<link sizes="57x57" rel="apple-touch-icon" href="<?php echo get_template_directory_uri(); ?>/img/apple-touch-icon-57x57-precomposed.png">
-<link sizes="114x114" rel="apple-touch-icon" href="<?php echo get_template_directory_uri(); ?>/img/apple-touch-icon-114x114-precomposed.png">
-<link sizes="72x72" rel="apple-touch-icon" href="<?php echo get_template_directory_uri(); ?>/img/apple-touch-icon-72x72-precomposed.png">
+<?php else: ?>
+<link rel="stylesheet" href="<?php bloginfo( 'stylesheet_directory' ); ?>/css/style.min.css">
+<?php endif; ?>
 
 <?php wp_head(); ?>
-<script src="<?php echo get_template_directory_uri(); ?>/js/libs/modernizr-2.0.6.min.js"></script>
+<script src="<?php echo get_template_directory_uri(); ?>/js/libs/modernizr-2.5.3.min.js"></script>
 </head>
 <body <?php body_class(); ?>>
 <div class="container">

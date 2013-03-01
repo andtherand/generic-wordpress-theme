@@ -1,0 +1,200 @@
+/*! grid
+ * */
+/*
+ Theme Name: WP-Skeleton
+ Theme URI: https://github.com/wycks/WP-Skeleton-Theme
+ Author: Wycks
+ Author URI: wpsecure.net
+ Description: Responsive Bare Bones framework based on Dave Gamache's
+ * getskeleton.com
+ Version: 1.0
+ License: http://www.opensource.org/licenses/mit-license.php.
+ Tags: Responsive, grid, mobile, framework, bare-bones, white, minimal
+
+ This theme, like WordPress, is licensed under the GPL.
+ Use it to make something cool, have fun, and share what you've learned with
+ * others.
+ */
+
+/* Table of Contents
+ ==================================================
+ #Base 960 Grid
+ #Tablet (Portrait)
+ #Mobile (Portrait)
+ #Mobile (Landscape)
+ #Clearing */
+
+/* #Base 960 Grid
+ ================================================== */
+
+.container {
+	position: relative;
+	width: 960px;
+	margin: 0 0 0 2%;
+	padding: 0;
+}
+.column, .columns {
+	float: left;
+	display: inline;
+	margin-left: 2%;
+	margin-right: 2%;
+}
+.row {
+	margin-bottom: 20px;
+}
+/* Nested Column Classes */
+.alpha {
+	margin-left: 0;
+}
+.omega {
+	margin-right: 0;
+}
+/* Base Grid */
+.container .one.column {
+	width: 4.25%
+}
+.container .two.columns {
+	width: 10.5%
+}
+.container .three.columns {
+	width: 16.75%
+}
+.container .four.columns {
+	width: 23.0%
+}
+.container .five.columns {
+	width: 29.25%
+}
+.container .six.columns {
+	width: 35.5%
+}
+.container .seven.columns {
+	width: 41.75%
+}
+.container .eight.columns {
+	width: 48.0%
+}
+.container .nine.columns {
+	width: 54.25%
+}
+.container .ten.columns {
+	width: 60.5%
+}
+.container .eleven.columns {
+	width: 66.75%
+}
+.container .twelve.columns {
+	width: 73.0%
+}
+.container .thirteen.columns {
+	width: 79.25%
+}
+.container .fourteen.columns {
+	width: 85.5%
+}
+.container .fifteen.columns {
+	width: 91.75%
+}
+.container .sixteen.columns {
+	width: 98.0%
+}
+.container .one-third.column {
+	width: 33%;
+}
+.container .two-thirds.column {
+	width: 66%;
+}
+/* Offsets */
+.container .offset-by-one {
+	padding-left: 6.25%
+}
+.container .offset-by-two {
+	padding-left: 12.5%
+}
+.container .offset-by-three {
+	padding-left: 18.75%
+}
+.container .offset-by-four {
+	padding-left: 25.0%;
+}
+.container .offset-by-five {
+	padding-left: 31.25%
+}
+.container .offset-by-six {
+	padding-left: 37.5%
+}
+.container .offset-by-seven {
+	padding-left: 43.75%
+}
+.container .offset-by-eight {
+	padding-left: 50.0%
+}
+.container .offset-by-nine {
+	padding-left: 56.25%;
+}
+.container .offset-by-ten {
+	padding-left: 62.5%;
+}
+.container .offset-by-eleven {
+	padding-left: 68.75%;
+}
+.container .offset-by-twelve {
+	padding-left: 75.0%;
+}
+.container .offset-by-thirteen {
+	padding-left: 81.25%;
+}
+.container .offset-by-fourteen {
+	padding-left: 87.5%;
+}
+.container .offset-by-fifteen {
+	padding-left: 93.75%;
+}
+/* #Clearing
+ ================================================== */
+
+/* Self Clearing Goodness */
+.container:after {
+	content: "\0020";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+}
+/* Use clearfix class on parent to clear nested columns,
+ or wrap each row of columns in a <div class="row"> */
+.clearfix:before, .clearfix:after, .row:before, .row:after {
+	content: '\0020';
+	display: block;
+	overflow: hidden;
+	visibility: hidden;
+	width: 0;
+	height: 0;
+}
+.row:after, .clearfix:after {
+	clear: both;
+}
+.row, .clearfix {
+	zoom: 1;
+}
+/* You can also use a <br class="clear" /> to clear columns */
+.clear {
+	clear: both;
+	display: block;
+	overflow: hidden;
+	visibility: hidden;
+	width: 0;
+	height: 0;
+}
+/* MICRO CLEARFIX HACK */
+.cf:before, .cf:after {
+	content: "";
+	display: table
+}/* For modern browsers */
+.cf:after {
+	clear: both
+}
+.cf {
+	zoom: 1
+} /* For IE 6/7 (trigger hasLayout) */
+

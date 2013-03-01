@@ -24,7 +24,7 @@
 </title>
 
 <?php if (APPLICATION_ENV !== 'production') :?>
-<link rel="stylesheet" href="<?php bloginfo( 'stylesheet_directory' ); ?>/css/normalize.css">
+<link rel="stylesheet" href="<?php bloginfo( 'stylesheet_directory' ); ?>/css/normalize/normalize.css">
 <link rel="stylesheet" href="<?php bloginfo( 'stylesheet_directory' ); ?>/css/baseline.css">
 <link rel="stylesheet" href="<?php bloginfo( 'stylesheet_directory' ); ?>/css/grid.css">
 <link rel="stylesheet" href="<?php bloginfo( 'stylesheet_directory' ); ?>/css/style.css">

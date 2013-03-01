@@ -64,13 +64,17 @@ function toolbox_setup() {
 	 */
 	register_nav_menus( array(
 		'primary' => __( 'Primary Menu', 'toolbox' ),
-		'top_menu' => __( 'Top Menu', 'toolbox' ),
+		'secondary' => __( 'Secondary Menu', 'toolbox'),
+		'footer' => __( 'Footer Menu', 'toolbox' ),
 	) );
 
 	/**
 	 * Add support for the Aside and Gallery Post Formats
 	 */
-	add_theme_support( 'post-formats', array( 'aside', 'image', 'gallery' ) );
+	// add_theme_support( 'post-formats', array( 'aside', 'image', 'gallery' ) );
+	add_theme_support( 'post-thumbnails',  array( 'post', 'page' ) );
+	add_image_size('featured', 400, 340, true);
+	add_image_size('post-thumb', 100, 140, true);
 }
 endif; // toolbox_setup
 
@@ -101,7 +105,6 @@ function toolbox_widgets_init() {
 		'before_title' => '<h1 class="widget-title">',
 		'after_title' => '</h1>',
 	) );
-
 }
 add_action( 'init', 'toolbox_widgets_init' );
 
@@ -164,10 +167,16 @@ endif;
  * @since Toolbox 1.2
  */
 function toolbox_body_classes( $classes ) {
-	//$classes = array();
-	if(is_front_page()){
+	global $post;
+
+	$classes = array();
+
+	if (is_front_page()) {
 		$classes[] = 'frontpage';
 	}
+
+	$post_name = $post->post_name;
+	$classes[] = $post_name;
 
 	return $classes;
 }
@@ -227,11 +236,31 @@ add_filter( 'attachment_link', 'toolbox_enhanced_image_navigation' );
 
 //------------------------------------------------------------------------------
 // - ADDITION
+//
+
+function toolbox_remove_menu_entries () {
+	remove_menu_page( 'edit-comments.php' );
+	remove_submenu_page( 'options-general.php', 'options-discussion.php' );
+
+}
+add_action( 'admin_menu', 'toolbox_remove_menu_entries' );
 
 // removes unnecessary wlw meta tag
 remove_action('wp_head', 'wlwmanifest_link');
 remove_action('wp_head', 'rsd_link');
+remove_action('wp_head', 'feed_links_extra', 3); // Removes the links to the extra feeds
+remove_action('wp_head', 'feed_links', 2); // Removes links to the general feeds
 
+
+function disable_our_feeds() {
+    wp_die( __('No feed available,please visit our <a href="'. get_bloginfo('url') .'">homepage</a>!') );
+}
+
+add_action('do_feed', 'disable_our_feeds', 1);
+add_action('do_feed_rdf', 'disable_our_feeds', 1);
+add_action('do_feed_rss', 'disable_our_feeds', 1);
+add_action('do_feed_rss2', 'disable_our_feeds', 1);
+add_action('do_feed_atom', 'disable_our_feeds', 1);
 /**
 * Remove recent comments styling
 * @link http://webstractions.com/wordpress/remove-recent-comments-inline-styl/
@@ -250,69 +279,40 @@ if (!function_exists('toolbox_remove_recent_comments_style')) {
     add_action('widgets_init', 'toolbox_remove_recent_comments_style');
 }
 
-/**
- * custom hook for randomimages
- */
-function random_rotating_header_images($args)
-{
-	do_action('random_rotating_header_images', $args);
+
+//remove page meta box
+function remove_wpcf_marketing_field() {
+	$doNotRemove = array('post', 'attachment', 'page', 'revision', 'nav_menu_items');
+	$types = get_post_types();
+	foreach($types as $type) {
+
+		if (!in_array($type, $doNotRemove)) {
+    		remove_meta_box('wpcf-marketing', $type, 'side');
+    	}
+    }
 }
+add_action('wpcf_admin_post_init','remove_wpcf_marketing_field');
 
 
-function toolbox_random_rotating_header($args)
-{
-	global $post;
 
-	$base = isset($args['base']) ? $args['base'] . '/' : '';
+// function toolbox_footer_add_script()
+// {
+// 	$js_path = get_template_directory_uri() . '/js/';
 
-	$upload_info = wp_upload_dir();
-	$post_name = $post->post_name;
-	$dir_base = $upload_info['basedir'] . '/' . $base;
+// 	wp_register_script('plugins', $js_path . 'plugins.js', array('jquery'), 1, true);
+// 	wp_enqueue_script('plugins');
+// }
 
-	$dir =  $dir_base . $post_name;
-	$base_url = $upload_info['baseurl'] . '/' . $base;
+// add_action('wp_enqueue_scripts', 'toolbox_footer_add_script');
 
-	$img_path = $base_url .  $post_name . '/';
 
-	if (!is_dir($dir)) {
-		$dir = $dir_base . $args['default'];
-		$img_path = $base_url . $args['default'] . '/';
-	}
-
-	$iterator = new DirectoryIterator($dir);
-	$files = array();
-
-	foreach ($iterator as $file_info) {
-		if ($file_info->isFile()) {
-            $files[] =  $file_info->getFilename();
-        }
-	}
-	$first = $files[0];
-	unset($files[0]);
-	shuffle($files);
-
-	$data = array(
-		'baseurl' => $img_path,
-		'imgs' => $files,
-	);
-
-	$js_path = get_template_directory_uri() . '/js/libs/';
-
-	wp_enqueue_script('myJquery', $js_path . 'jquery.min.js', array(), '1', true);
-	wp_enqueue_script('flex_slider', $js_path . 'jquery.flexslider-min.js', array('myJquery'), '1', true);
-	wp_enqueue_script('slider', $js_path . 'slider.js', array('flex_slider'), '1', true);
-	wp_localize_script('slider', 'svs_slider', $data);
-
-	echo $img_path . $first;
-}
-
-add_action('random_rotating_header_images', 'toolbox_random_rotating_header');
 
 //-----------------------------------------------------------------------------
 // WALKER CLASS FOR THE MENU
 
 class T5_Nav_Menu_Walker_Simple extends Walker_Nav_Menu
 {
+
 	/**
 	 * Start the element output.
 	 *
@@ -324,28 +324,34 @@ class T5_Nav_Menu_Walker_Simple extends Walker_Nav_Menu
 	 */
 	public function start_el( &$output, $item, $depth, $args )
 	{
-		$output     .= '<li>';
-		$attributes  = '';
+		$output     .= '<li';
+		$hrefAttributes  = '';
 		$classes = empty( $item->classes ) ? array() : (array) $item->classes;
 
-		! empty ( $item->attr_title )
+		!empty ( $item->attr_title )
 			// Avoid redundant titles
-			and $item->attr_title !== $item->title
-			and $attributes .= ' title="' . esc_attr( $item->attr_title ) .'"';
+			&& $item->attr_title !== $item->title
+			&& $hrefAttributes .= ' title="' . esc_attr( $item->attr_title ) .'"';
 
-		! empty ( $item->url )
-			and $attributes .= ' href="' . esc_attr( $item->url ) .'"';
+		!empty ( $item->url )
+			&& $hrefAttributes .= ' href="' . esc_attr( $item->url ) .'"';
 
-		if(in_array('current-menu-item', $classes)) {
-        	$attributes .= ' class="active"';
+		$activeClasses = array('current-menu-item', 'current-page-ancestor');
+		$liAttribute = '>';
+
+		foreach($activeClasses as $activeClass) {
+			if (in_array($activeClass, $classes)) {
+        		$liAttribute = ' class="active">';
+        		$hrefAttributes .= ' class="active-link"';
+        	}
         }
 
-		$attributes  = trim( $attributes );
-		$title       = apply_filters( 'the_title', $item->title, $item->ID );
-		$item_output = "$args->before<a $attributes>$args->link_before$title</a>"
-						. "$args->link_after$args->after";
+        $output .= $liAttribute;
 
-		// Since $output is called by reference we don't need to return anything.
+		$hrefAttributes  = trim( $hrefAttributes );
+		$title       = apply_filters( 'the_title', $item->title, $item->ID );
+		$item_output = sprintf("%s<a %s>%s%s</a>%s%s", $args->before, $hrefAttributes, $args->link_before, $title,  $args->link_after, $args->after);
+
 		$output .= apply_filters(
 			'walker_nav_menu_start_el'
 			,   $item_output
@@ -387,4 +393,16 @@ class T5_Nav_Menu_Walker_Simple extends Walker_Nav_Menu
 	{
 		$output .= '</li>';
 	}
+
+	function display_element( $element, &$children_elements, $max_depth, $depth = 0, $args, &$output )
+    {
+        $id_field = $this->db_fields['id'];
+
+        if ( is_object( $args[0] ) ) {
+            $args[0]->has_children = ! empty( $children_elements[$element->$id_field] );
+        }
+        return parent::display_element( $element, $children_elements, $max_depth, $depth, $args, $output );
+    }
 }
+
+// ---

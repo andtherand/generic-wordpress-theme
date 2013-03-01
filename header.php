@@ -39,10 +39,10 @@
 <body <?php body_class(); ?>>
 <div class="container">
 
-	<header role="banner" class="alpha">
-		<h1><a href="<?php echo home_url( '/' ); ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home">
-			<img src="<?php echo get_template_directory_uri(); ?>/img/logo.png"></a></h1>
-	</header>
+	
+    <header id="masthead" class="branding" role="banner">
+        <h1><a href="<?php echo home_url( '/' ); ?>" rel="home" title="zur Startseite" class="ir"><?php bloginfo('name'); ?></a></h1>
+    </header>
 
 	<div class="main-nav navigation two columns alpha omega">
 		<nav id="access" role="navigation">

@@ -72,7 +72,7 @@ function toolbox_setup() {
 	 * Add support for the Aside and Gallery Post Formats
 	 */
 	// add_theme_support( 'post-formats', array( 'aside', 'image', 'gallery' ) );
-	add_theme_support( 'post-thumbnails',  array( 'post', 'page' ) );
+	add_theme_support( 'post-thumbnails',  array( 'post', 'page', 'player' ) );
 	add_image_size('featured', 400, 340, true);
 	add_image_size('post-thumb', 100, 140, true);
 }

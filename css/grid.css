@@ -30,7 +30,7 @@
 .container {
 	position: relative;
 	width: 960px;
-	margin: 0 0 0 2%;
+	margin: 0 auto;
 	padding: 0;
 }
 .column, .columns {
@@ -187,14 +187,14 @@
 	height: 0;
 }
 /* MICRO CLEARFIX HACK */
-.cf:before, .cf:after {
+.group:before, .group:after {
 	content: "";
 	display: table
 }/* For modern browsers */
-.cf:after {
+.group:after {
 	clear: both
 }
-.cf {
+.group {
 	zoom: 1
 } /* For IE 6/7 (trigger hasLayout) */
 

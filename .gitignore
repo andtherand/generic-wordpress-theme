@@ -1,0 +1,13 @@
+﻿.buildpath
+.project
+.vagrant
+.settings
+.svn
+.idea
+*.log
+*.sublime-*
+sess_*
+#dirs
+Zend/
+phpqrcode/
+data/session
